@@ -1,0 +1,43 @@
+# Maintainer: Stefan Zimmermann <user@zimmermann.co>
+
+_realname=mman
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2017.01.14
+pkgrel=1
+pkgdesc='mman library for Windows'
+arch=('any')
+license=('MIT')
+url='https://github.com:witwall/mman-win32'
+
+makedepends=(
+    "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+
+build() {
+    builddir="${srcdir}/../build/${CARCH}"
+    installdir="${srcdir}/../install/${CARCH}"
+
+    mkdir -p "${builddir}"
+    mkdir -p "${installdir}"
+
+    cd "${builddir}"
+    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="${installdir}" "${srcdir}"
+
+    mingw32-make
+    mingw32-make install
+}
+
+package() {
+    builddir="${srcdir}/../build/${CARCH}"
+    installdir="${srcdir}/../install/${CARCH}"
+
+    prefixdir="${pkgdir}${MINGW_PREFIX}"
+
+    for dir in $(find "${installdir}" -type d) ; do
+        install -d "${prefixdir}/${dir#${installdir}}"
+    done
+    for file in $(find "${installdir}" -type f) ; do
+        install "${file}" "${prefixdir}/${file#${installdir}}"
+    done
+}
