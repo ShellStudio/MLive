@@ -23,15 +23,21 @@ function Install-MLivePackage {
 [CmdletBinding()]
     param (
         [System.IO.DirectoryInfo]
-        $Path = "."
+        $Path = ".",
+        [Arch]
+        $Arch = [Arch]::All
     )
     Process {
         $Path = Get-Item $Path
         $Name = $Path.Name
         Push-Location -Path $Path
         Build-MLivePackage -Path $Path
-        pacman -U mingw-w64-i686-$Name-*.pkg.tar.xz
-        pacman -U mingw-w64-x86_64-$Name-*.pkg.tar.xz
+        if ($Arch -eq [Arch]::i686 -or $Arch -eq [Arch]::All) {
+            pacman -U mingw-w64-i686-$Name-*.pkg.tar.xz
+        }
+        if ($Arch -eq [Arch]::x86_64 -or $Arch -eq [Arch]::All) {
+            pacman -U mingw-w64-x86_64-$Name-*.pkg.tar.xz
+        }
         Pop-Location
     }
 }
