@@ -13,7 +13,7 @@ function Build-MLivePackage {
     Process {
         $Path = Get-Item $Path
         Push-Location -Path $Path
-        bash /usr/bin/makepkg-mingw
+        bash /usr/bin/makepkg-mingw -f
         Pop-Location
     }
 }
