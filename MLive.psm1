@@ -8,12 +8,22 @@ function Build-MLivePackage {
     [CmdletBinding()]
     param (
         [System.IO.DirectoryInfo]
-        $Path = "."
+        $Path = ".",
+        [Arch]
+        $Arch = [Arch]::All
     )
     Process {
         $Path = Get-Item $Path
         Push-Location -Path $Path
-        bash /usr/bin/makepkg-mingw -f
+        [System.Collections.ArrayList]$mingw = @()
+        if ($Arch -eq [Arch]::i686 -or $Arch -eq [Arch]::All) {
+            [Void]$mingw.Add('mingw32')
+        }
+        if ($Arch -eq [Arch]::x86_64 -or $Arch -eq [Arch]::All) {
+            [Void]$mingw.Add('mingw64')
+        }
+        bash -c ("MINGW_INSTALLS='" + $([String]::Join(' ', [Array]$mingw)) +
+                 "' /usr/bin/makepkg-mingw -f")
         Pop-Location
     }
 }
