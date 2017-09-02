@@ -1,3 +1,9 @@
+# MLive \\ MSYS2 Packages from source repositories
+#
+# Copyright (C) 2017 Stefan Zimmermann <user@zimmermann.co>
+#
+# Licensed under the Apache License, Version 2.0
+
 enum Arch {
     All
     i686
